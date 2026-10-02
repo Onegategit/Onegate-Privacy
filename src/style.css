@@ -282,7 +282,7 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 .docs-layout h2 { margin-bottom: var(--s4); font: 300 var(--fs-2)/1.1 var(--serif); }
 .docs-layout h3 { margin: var(--s5) 0 var(--s2); font: 400 18px var(--serif); }
 .docs-layout article p { max-width: 72ch; margin-bottom: var(--s4); font-size: var(--fs-body); line-height: 1.7; color: #14243b; }
-.docs-layout article a { text-decoration: underline; text-underline-offset: 4px; }
+.docs-layout article a { text-decoration: underline; text-underline-offset: 4px; overflow-wrap: anywhere; }
 .docs-layout article a.repo-line { text-decoration: none; }
 .docs-layout code { padding: 2px 6px; border-radius: 3px; background: var(--ink); color: var(--ember-hi); font: 500 .9em var(--mono); }
 .notice { display: flex; gap: var(--s3); margin: var(--s5) 0; padding: var(--s4) var(--s5); background: var(--ink); color: var(--paper); border-radius: var(--r); }
