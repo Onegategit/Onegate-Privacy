@@ -142,6 +142,8 @@ try {
     },
     { address: account.address, signature, depositTx, recipient, feeRecipient },
   );
+  // the holders gate in front of the workspace: this mock wallet reads as a holder
+  await page.route("**/api/terminal?action=holder*", (r) => r.fulfill({ json: { account: new URL(r.request().url()).searchParams.get("account"), balance: "1", amount: 1e7, priceUsd: 0.00003, priceSource: "curve", worthUsd: 300, minUsd: 150, ok: true, at: new Date().toISOString() } }));
   await page.goto(base + "/privacy", { waitUntil: "networkidle" });
   await expect(
     page.getByRole("button", { name: "Switch to Robinhood", exact: true }),

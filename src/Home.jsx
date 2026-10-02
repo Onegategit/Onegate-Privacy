@@ -19,6 +19,7 @@ const steps = [
 const GLYPHS = '░▒▓█NX/';
 const scramble = (n, seed) => Array.from({ length: n }, (_, i) => GLYPHS[(i * 7 + seed * 13 + ((i * seed) % 5)) % GLYPHS.length]).join('');
 const updates = [
+  ['Oct 2, 2026', 'The privacy workspace is now for holders: connect a wallet with at least $150 of $OGATE. The terminal stays open, and buys $OGATE on its curve.'],
   ['Oct 2, 2026', '$OGATE is live on Robinhood Chain at 0xbe5d…80d6, a Pons launch paired with ETH. The terminal buys it on its curve, dry-run from your account like every other coin.'],
   ['Oct 2, 2026', 'The source is public on GitHub: the pages, the terminal server, the privacy worker and the tests, checked on every change.'],
   ['Oct 2, 2026', 'The terminal now opens like a trading app: one bar with search, chain, ETH price and your wallet, and the columns fill the screen.'],
@@ -28,6 +29,7 @@ const updates = [
   ['Oct 1, 2026', 'Private pools on Robinhood Chain: deposit, local proofs and relay withdrawal, each reviewed before anything is signed.'],
 ];
 const faq = [
+  ['Who can use the privacy workspace?', 'Wallets holding at least $150 of $OGATE. Onegate reads the balance on Robinhood Chain and prices it on the launch curve, then on its pool. Nothing is signed for the check, and the terminal stays open so anyone can buy in.'],
   ['Does Onegate hold my funds?', 'No custodial balance. Funds go into external Privacy Cash pool contracts, which carry their own contract and service risks.'],
   ['Is my wallet connection private?', 'No. Your wallet address and every deposit and withdrawal are public on chain. RPC, indexer and relay providers can see network metadata.'],
   ['How do I recover a private balance?', 'Sign the same fixed unlock message with the same wallet and signing method. A different signature can derive a different private account. Never share it.'],

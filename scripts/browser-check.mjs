@@ -86,12 +86,10 @@ try {
         await expect(page.locator('details[open]')).toHaveCount(1);
       }
       if (route === '/privacy') {
-        await page.getByRole('button', { name: 'Withdraw', exact: true }).click();
-        await expect(page.getByLabel('Recipient wallet')).toBeVisible();
-        await page.getByLabel('Payment amount').fill('1e3');
-        await expect(page.locator('.privacy-form .privacy-error')).toContainText('decimal');
-        await page.getByRole('button', { name: 'Activity', exact: true }).click();
-        await expect(page.getByText('No operations in this session')).toBeVisible();
+        // no wallet: the holders gate stands in front of the workspace
+        await expect(page.locator('.gate-card')).toBeVisible();
+        await expect(page.locator('.gate-card').getByRole('button', { name: 'Connect wallet' })).toBeVisible();
+        await expect(page.locator('.privacy-workspace')).toHaveCount(0);
       }
     }
     assert.deepEqual(errors, []); await page.close(); report.push({width, passed:true}); console.log(`PASS UI ${width}`);
@@ -148,6 +146,31 @@ try {
   }
   assert.deepEqual(buyErrors, []); await buyer.close();
   console.log('PASS terminal connect, balance, V3 and V4 buys through a stand-in wallet');
+
+  // The holders gate: a stand-in wallet in front of the privacy workspace and a mocked holder reading (a short wallet, then a holder).
+  const CA = '0xbe5d432a0b30443987d261b664cc6bb8bccb80d6';
+  for (const [width, worth] of [[1366, 12.5], [1366, 4200], [390, 4200]]) {
+    const page = await browser.newPage({ viewport: { width, height: width < 500 ? 844 : 800 } });
+    const errors = []; page.on('pageerror', e => errors.push(e.message));
+    await page.addInitScript(() => { window.ethereum = { request: async ({ method }) => { if (method === 'eth_accounts' || method === 'eth_requestAccounts') return ['0x3333333333333333333333333333333333333333']; if (method === 'eth_chainId') return '0x1237'; if (method === 'eth_getBalance') return '0x0'; throw Object.assign(new Error('unsupported ' + method), { code: 4200 }); }, on() {}, removeListener() {} }; });
+    await page.route('**/api/terminal?action=holder*', r => r.fulfill({ json: { account: '0x3333333333333333333333333333333333333333', token: CA, balance: '1', amount: worth / 0.00003, priceUsd: 0.00003, priceSource: 'curve', worthUsd: worth, minUsd: 150, ok: worth >= 150, at: new Date().toISOString() } }));
+    await page.goto(base + '/privacy', { waitUntil: 'domcontentloaded' });
+    if (worth < 150) {
+      await expect(page.locator('.gate-note')).toContainText('Add about $137.50 more');
+      assert.equal(await page.locator('.gate-card a.button').getAttribute('href'), '/terminal/' + CA, 'The gate links to buying $OGATE');
+      await expect(page.locator('.privacy-workspace')).toHaveCount(0);
+    } else {
+      await page.getByRole('button', { name: 'Withdraw', exact: true }).click();
+      await expect(page.getByLabel('Recipient wallet')).toBeVisible();
+      await page.getByLabel('Payment amount').fill('1e3');
+      await expect(page.locator('.privacy-form .privacy-error')).toContainText('decimal');
+      await page.getByRole('button', { name: 'Activity', exact: true }).click();
+      await expect(page.getByText('No operations in this session')).toBeVisible();
+    }
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `gate overflow ${width}`);
+    assert.deepEqual(errors, []); await page.close();
+  }
+  console.log('PASS holders gate: no wallet, a short wallet and a holder in front of the privacy workspace');
   const page = await browser.newPage({ acceptDownloads: true });
   await page.goto(base + '/vault');
   let sent = 0; page.on('request', req => { if (req.method() === 'POST' || req.method() === 'PUT') sent++; });

@@ -1,6 +1,6 @@
-import { TerminalError, getBalances, getCandles, getCoin, getList, getQuote, simulate } from "../server/terminal.js";
+import { TerminalError, getBalances, getCandles, getCoin, getHolder, getList, getQuote, simulate } from "../server/terminal.js";
 
-// One function for the coin terminal: list, coin, candles, quote, balances (GET) and simulate (POST).
+// One function for the coin terminal: list, coin, candles, quote, balances, holder (GET) and simulate (POST).
 const readBody = (req) => new Promise((resolve, reject) => {
   if (req.body && typeof req.body === "object") return resolve(req.body);
   let raw = "";
@@ -22,6 +22,7 @@ export default async function handler(req, res) {
     else if (action === "candles") { data = await getCandles(q.pool, q.frame); cache = "public, s-maxage=30, stale-while-revalidate=120"; }
     else if (action === "quote") data = await getQuote(q);
     else if (action === "balances") data = await getBalances(q.account);
+    else if (action === "holder") data = await getHolder(q.account);
     else throw new TerminalError("Unknown action.", 400);
     res.setHeader("Cache-Control", cache);
     res.end(JSON.stringify(data));

@@ -16,7 +16,7 @@
 
 Deposit into a privacy pool from your own wallet, let your browser build the proof, and withdraw to any address you choose. Next to it sits a terminal for the chain's memes and tokenized stocks, so you can read a coin and buy it with ETH in the same place.
 
-**Private pools** - ETH and USDG pools on Robinhood Chain through Privacy Cash EVM 1.3.3, with proofs built in a browser worker from pinned circuit files
+**Private pools** - ETH and USDG pools on Robinhood Chain through Privacy Cash EVM 1.3.3, with proofs built in a browser worker from pinned circuit files, open to wallets holding at least $150 of $OGATE
 
 **Coin terminal** - Memes, tokenized stocks and majors with charts, pools and your balance, bought with ETH on Uniswap V3, Uniswap V4 or a Pons curve
 
@@ -115,6 +115,8 @@ Runtime code hashes for the router, quoter, factory and pool manager contracts w
 - No funded deposit or withdrawal has been claimed; payload guards are tested with fixtures and an unfunded proof run
 - Hardware wallets are not supported by the privacy SDK; the same wallet and signing method are needed to recover a private balance
 - Majors are shown for reference and are not routed; tokenized stocks follow their issuers' terms
+- The privacy workspace opens for wallets holding at least $150 of $OGATE, priced on the launch curve and then on its deepest pool of at least $10K; the check runs in the interface, and the terminal stays open to everyone
+- Pools under $1K of liquidity are ignored for routes, prices and stats; a Pons launch still on its curve is always bought on the curve
 - Terminal caches and request budgets are per server instance, not a durable account-wide limit
 - The $OGATE fee split is TBA; the shares will be posted on the docs page
 - $OGATE has no market index yet, so the terminal shows its curve quote but no price chart until one appears

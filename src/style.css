@@ -213,6 +213,27 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 .foot nav a { display: flex; align-items: center; min-height: 44px; font-size: 13px; color: var(--mist); transition: color var(--fast) var(--ease-ui); }
 .foot nav a:hover { color: var(--paper); }
 .foot nav a svg { margin-right: 8px; }
+/* the holders gate in front of the privacy workspace */
+.gate-page { max-width: 880px; }
+.gate-card { position: relative; display: grid; gap: var(--s5); padding: var(--s6); border-radius: var(--r); background: var(--ink); color: var(--paper); box-shadow: 0 30px 80px -30px #04050f80; }
+.gate-card::before { content: ''; position: absolute; left: 8%; right: 8%; top: 0; height: 2px; background: var(--slit); box-shadow: 0 0 14px #ff8a3d99; }
+.gate-head { display: flex; gap: var(--s4); align-items: flex-start; }
+.gate-head > svg { flex: none; margin-top: 6px; color: var(--ember); }
+.gate-head h2 { font: 300 clamp(26px, 2.6vw, 34px)/1.1 var(--serif); }
+.gate-head p { margin-top: var(--s3); max-width: 56ch; font: 400 14px/1.6 var(--mono); color: var(--mist); }
+.gate-read { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid #ffffff1f; border-bottom: 1px solid #ffffff1f; }
+.gate-read div { padding: var(--s4) var(--s3) var(--s4) 0; }
+.gate-read dt { font: 500 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mist); }
+.gate-read dd { margin-top: var(--s2); font: 500 15px var(--mono); overflow-wrap: anywhere; }
+.gate-meter { height: 6px; border-radius: 3px; background: #ffffff1a; overflow: hidden; }
+.gate-meter i { display: block; height: 100%; border-radius: 3px; background: var(--slit); box-shadow: 0 0 12px #ff8a3d99; transition: width var(--slow) var(--ease); }
+.gate-note { font: 400 14px/1.6 var(--mono); color: var(--mist); }
+.gate-note.warn { color: var(--ember-hi); }
+.gate-actions { display: flex; flex-wrap: wrap; gap: var(--s4); }
+.gate-actions .button { color: var(--ink); }
+.gate-ca { font: 500 13px var(--mono); color: var(--mist); }
+.gate-ca .ca-tag:hover { color: var(--ember); }
+@media (max-width: 700px) { .gate-card { padding: var(--s5); } .gate-read { grid-template-columns: 1fr 1fr; } .gate-actions .button { width: 100%; } }
 .repo-line { text-decoration: none; display: flex; align-items: center; gap: var(--s4); margin-top: var(--s4); padding: var(--s4) var(--s5); border: var(--bw) solid var(--ink); border-radius: var(--r); background: var(--paper); color: var(--ink); transition: box-shadow var(--fast) var(--ease-ui), transform var(--fast) var(--ease-ui); }
 .repo-line:hover { transform: translateY(-1px); box-shadow: 0 3px 0 var(--ember); }
 .repo-line span { display: grid; gap: 2px; flex: 1; min-width: 0; }

@@ -1,4 +1,5 @@
-import { BaseError, createPublicClient, decodeFunctionResult, encodeFunctionData, erc20Abi, fallback, http, keccak256, parseAbi } from "viem";
+import { BaseError, createPublicClient, decodeFunctionResult, encodeFunctionData, erc20Abi, fallback, formatUnits, http, keccak256, parseAbi } from "viem";
+import { HOLDER_MIN_USD, IDENTITY } from "../src/identity.js";
 import { MULTICALL3, NATIVE, PONS_FACTORY, POOL_MANAGER, QUOTER_V2, SWAP_ROUTER02, UNIVERSAL_ROUTER, USDG, V3_FACTORY, V4_QUOTER, WETH, curveAbi, encodeCurveBuy, encodeV3Buy, encodeV4Buy, poolIdOf, v3Path } from "../src/terminal-route.js";
 export * from "../src/terminal-route.js";
 
@@ -173,6 +174,9 @@ async function pairsOf(address) {
     return (json.pairs || []).filter((p) => p.chainId === "robinhood");
   });
 }
+// Pools below this depth are ignored for routes, prices and stats (a $1 pool can print any price).
+const MIN_POOL_USD = 1000;
+const deepPair = (p) => (num(p.liquidity?.usd) ?? 0) >= MIN_POOL_USD;
 const pairKind = (p) => p.dexId === "uniswap" && p.labels?.includes("v3") ? "v3" : p.dexId === "uniswap" && p.labels?.includes("v4") ? "v4" : null;
 const pairRoutable = (p, address) => {
   const kind = pairKind(p), quote = p.quoteToken?.address?.toLowerCase();
@@ -189,18 +193,23 @@ export async function getCoin(input) {
     const pairs = (await pairsOf(address).catch((e) => { pairsErr = e; return []; })).filter((p) => p.baseToken?.address?.toLowerCase() === address || p.quoteToken?.address?.toLowerCase() === address)
       .sort((a, b) => (num(b.liquidity?.usd) ?? 0) - (num(a.liquidity?.usd) ?? 0));
     const own = pairs.filter((p) => p.baseToken?.address?.toLowerCase() === address);
-    const route = own.filter((p) => pairRoutable(p, address))[0] || null;
-    const lead = route || own[0] || null;
-    let token = lead?.baseToken || pairs[0]?.quoteToken || null, decimals = null;
-    budget("rpc", 3, 400);
+    // A Pons launch still on its ETH curve trades on the curve; pools opened beside it are often dust and never route or price it.
+    budget("rpc", 4, 400);
+    const launch = await client.readContract({ address: PONS_FACTORY, abi: ponsAbi, functionName: "getLaunchedToken", args: [address] }).catch(() => null);
+    const onCurve = Boolean(launch?.exists && Number(launch.phase) === 0 && launch.pairToken.toLowerCase() === NATIVE);
+    const route = onCurve ? null : own.filter((p) => deepPair(p) && pairRoutable(p, address))[0] || null;
+    const lead = onCurve ? null : route || own.filter(deepPair)[0] || null;
+    let token = lead?.baseToken || own[0]?.baseToken || pairs[0]?.quoteToken || null, decimals = null;
     const [symbol, name, dec] = await Promise.all(["symbol", "name", "decimals"].map((functionName) => client.readContract({ address, abi: erc20Abi, functionName }).catch(() => null)));
     if (dec == null && !token) throw new TerminalError("This address is not a token on Robinhood Chain.", 404);
     decimals = dec == null ? null : Number(dec);
-    let pons = null;
-    if (!route) {
-      budget("rpc", 1, 400);
-      const r = await client.readContract({ address: PONS_FACTORY, abi: ponsAbi, functionName: "getLaunchedToken", args: [address] }).catch(() => null);
-      if (r?.exists && Number(r.phase) === 0 && r.pairToken.toLowerCase() === NATIVE) pons = { kind: "pons", venue: VENUE.pons, pool: r.curve.toLowerCase(), pair: `${symbol || token?.symbol} / ETH`, quote: NATIVE, createdAt: null };
+    const pons = onCurve ? { kind: "pons", venue: VENUE.pons, pool: launch.curve.toLowerCase(), pair: `${symbol || token?.symbol} / ETH`, quote: NATIVE, createdAt: null } : null;
+    // on the curve the price is the curve's own spot price (virtual reserves, ETH in dollars)
+    let curveUsd = null;
+    if (onCurve) {
+      const [qr, tr] = await client.readContract({ address: launch.curve, abi: curveAbi, functionName: "getReserves" }).catch(() => [0n, 0n]);
+      const eth = qr > 0n && tr > 0n ? await ethUsd() : null;
+      curveUsd = eth ? (Number(qr) / Number(tr)) * eth : null;
     }
     if (pairsErr && !pons) throw pairsErr instanceof TerminalError ? pairsErr : new TerminalError("The pair feed is unavailable right now.", 502);
     const kind = route ? pairKind(route) : null;
@@ -209,7 +218,7 @@ export async function getCoin(input) {
       group: STOCKS[address] ? "stocks" : "memes",
       // Stock tokens carry one shared placeholder image on the feeds, so the interface sets their ticker instead.
       image: STOCKS[address] ? null : /^https:\/\//.test(lead?.info?.imageUrl || "") ? lead.info.imageUrl : null,
-      priceUsd: num(lead?.priceUsd), change24h: num(lead?.priceChange?.h24), volume24h: num(lead?.volume?.h24), liquidityUsd: num(lead?.liquidity?.usd),
+      priceUsd: curveUsd ?? num(lead?.priceUsd), priceSource: curveUsd != null ? "curve" : lead ? "pool" : null, change24h: num(lead?.priceChange?.h24), volume24h: num(lead?.volume?.h24), liquidityUsd: num(lead?.liquidity?.usd),
       fdvUsd: num(lead?.fdv), marketCapUsd: num(lead?.marketCap), buys24h: lead?.txns?.h24?.buys ?? null, sells24h: lead?.txns?.h24?.sells ?? null,
       chartPool: lead ? String(lead.pairAddress).toLowerCase() : null,
       route: route ? { kind, venue: VENUE[kind], pool: String(route.pairAddress).toLowerCase(), pair: `${route.baseToken.symbol} / ${route.quoteToken.symbol}`, quote: route.quoteToken.address.toLowerCase(), createdAt: route.pairCreatedAt ? new Date(route.pairCreatedAt).toISOString() : null } : pons,
@@ -410,5 +419,48 @@ export async function getBalances(input) {
     const rows = decodeFunctionResult({ abi: multicallAbi, functionName: "aggregate3", data: ret }).map((r) => (r.success && r.returnData.length >= 66 ? BigInt(r.returnData.slice(0, 66)) : null));
     const eth = rows.pop();
     return { account, eth: eth == null ? null : eth.toString(), items: coins.map((c, i) => ({ address: c.address, raw: rows[i] == null ? null : rows[i].toString() })).filter((x) => x.raw !== "0"), at: new Date().toISOString() };
+  });
+}
+
+// ---------- holders ----------
+const OGATE = IDENTITY.contract;
+/** ETH in dollars: the reference list first, else 1 ETH quoted into USDG on the ETH/USDG Uniswap V4 pool. */
+async function ethUsd() {
+  const eth = (await majors()).find((m) => m.symbol === "ETH")?.priceUsd;
+  if (eth > 0) return eth;
+  return cached("eth:usd", 60000, async () => {
+    const out = await v4Quote(await usdgLegV4(), true, 10n ** 18n);
+    return out > 0n ? Number(out) / 1e6 : null;
+  }).catch(() => null);
+}
+/** $OGATE in dollars: the Pons launch curve while it is on it (virtual reserves give the spot price in ETH), after that its deepest pool. */
+async function ogatePrice() {
+  return cached("ogate:price", 60000, async () => {
+    budget("rpc", 2, 400);
+    const r = await client.readContract({ address: PONS_FACTORY, abi: ponsAbi, functionName: "getLaunchedToken", args: [OGATE] }).catch(() => null);
+    if (!r?.exists || Number(r.phase) !== 0 || r.pairToken.toLowerCase() !== NATIVE) {
+      // after the curve: the deepest listed pool of at least $10K, the same bar the board uses
+      const pairs = await pairsOf(OGATE).catch(() => []);
+      const own = pairs.filter((p) => p.baseToken?.address?.toLowerCase() === OGATE && num(p.priceUsd) > 0 && (num(p.liquidity?.usd) ?? 0) >= 10000).sort((a, b) => (num(b.liquidity?.usd) ?? 0) - (num(a.liquidity?.usd) ?? 0))[0];
+      return own ? { usd: num(own.priceUsd), source: "pool" } : null;
+    }
+    const [quoteReserve, tokenReserve] = await client.readContract({ address: r.curve, abi: curveAbi, functionName: "getReserves" });
+    if (quoteReserve <= 0n || tokenReserve <= 0n) return null;
+    const eth = await ethUsd();
+    return eth ? { usd: (Number(quoteReserve) / Number(tokenReserve)) * eth, source: "curve" } : null;
+  });
+}
+/** Whether a wallet holds at least HOLDER_MIN_USD of $OGATE. An unreadable price is reported as unknown, never as a pass or a zero. */
+export async function getHolder(input) {
+  const account = addr(input);
+  if (!account) throw new TerminalError("Provide a wallet address.", 400);
+  if (!OGATE) throw new TerminalError("The $OGATE contract is not set.", 503);
+  return cached("holder:" + account, 15000, async () => {
+    budget("rpc", 1, 400);
+    const balance = await client.readContract({ address: OGATE, abi: erc20Abi, functionName: "balanceOf", args: [account] });
+    const price = await ogatePrice().catch(() => null);
+    const amount = Number(formatUnits(balance, 18));
+    const worthUsd = balance === 0n ? 0 : price ? amount * price.usd : null;
+    return { account, token: OGATE, balance: balance.toString(), amount, priceUsd: price?.usd ?? null, priceSource: price?.source ?? null, worthUsd, minUsd: HOLDER_MIN_USD, ok: worthUsd != null && worthUsd >= HOLDER_MIN_USD, at: new Date().toISOString() };
   });
 }
