@@ -51,7 +51,6 @@ function Shell() {
         <nav aria-label="Footer"><Link to="/terminal">Terminal</Link><Link to="/privacy">Privacy workspace</Link><Link to="/docs">Docs & risks</Link><a href={IDENTITY.repo} target="_blank" rel="noreferrer"><GithubMark size={14} />GitHub</a></nav>
         <span className="foot-id">{IDENTITY.ticker} · CA {IDENTITY.contract || 'TBA'}</span>
       </div>
-      <p>Independent interface to Privacy Cash EVM 1.3.3 on Robinhood Chain. Unaudited. Not affiliated with Robinhood or the integrated protocols.</p>
     </footer>}
   </>;
 }

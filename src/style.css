@@ -213,7 +213,6 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 .repo-line b { font: 600 15px var(--mono); overflow-wrap: anywhere; }
 .repo-line small { font: 400 12px var(--mono); color: var(--text-2); }
 .foot-id { margin-left: auto; font: 500 13px var(--mono); color: var(--mist); }
-.foot p { max-width: var(--max); margin: var(--s5) auto 0; font: 500 var(--fs-label)/1.6 var(--mono); color: var(--dim); }
 
 /* Tool pages share one heading: big type over the slit. */
 .page, .workspace { max-width: 1520px; min-height: 100svh; margin: 0 auto; padding: calc(var(--dock-h) + 12px + var(--s7)) var(--gutter) var(--s9); }
