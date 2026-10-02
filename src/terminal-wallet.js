@@ -78,6 +78,18 @@ export async function sendTransaction(tx) {
   return hash.toLowerCase();
 }
 
+/** Sign a plain-text message (personal_sign) after re-reading the wallet's account. Never a transaction. */
+export async function signMessage(message, from) {
+  if (!active) throw new Error('Connect a wallet first.');
+  const accounts = await active.request({ method: 'eth_accounts' });
+  const account = Array.isArray(accounts) ? address(accounts[0]) : null;
+  if (!account || account !== state.account || account !== from) throw new Error('The wallet account changed. Try again.');
+  const hexMessage = '0x' + Array.from(new TextEncoder().encode(message), b => b.toString(16).padStart(2, '0')).join('');
+  const signature = await active.request({ method: 'personal_sign', params: [hexMessage, account] });
+  if (typeof signature !== 'string' || !/^0x[0-9a-fA-F]{130,}$/.test(signature)) throw new Error('The wallet returned no signature.');
+  return signature;
+}
+
 export function useTerminalWallet() {
   const s = useSyncExternalStore(subscribe, () => state, () => state);
   useEffect(() => {
@@ -94,5 +106,5 @@ export function useTerminalWallet() {
     restore(); const t = setTimeout(restore, 450);
     return () => clearTimeout(t);
   }, []);
-  return { ...s, onChain: s.chainHex === CHAIN_HEX, connect, disconnect, switchChain, sendTransaction };
+  return { ...s, onChain: s.chainHex === CHAIN_HEX, connect, disconnect, switchChain, sendTransaction, signMessage };
 }

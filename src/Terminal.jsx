@@ -84,10 +84,10 @@ function WalletKey({ wallet, big }) {
   </span>;
 }
 
-function Buy({ coin, wallet, ethRaw, onSent }) {
+function Buy({ coin, wallet, ethRaw, onSent, prefill }) {
   const [input, setInput] = useState(''), [slip, setSlip] = useState(100), [quote, setQuote] = useState(null), [qErr, setQErr] = useState(''), [quoting, setQuoting] = useState(false), [step, setStep] = useState({ kind: 'idle' }), [tick, setTick] = useState(0);
   const wei = useMemo(() => { const v = input.trim(); if (!/^\d*\.?\d*$/.test(v) || !(Number(v) > 0)) return null; try { return parseEther(v); } catch { return null; } }, [input]);
-  useEffect(() => { setInput(''); setQuote(null); setStep({ kind: 'idle' }); }, [coin.address]);
+  useEffect(() => { setInput(prefill || ''); setQuote(null); setStep({ kind: 'idle' }); }, [coin.address, prefill]);
   useEffect(() => {
     if (wei == null) { setQuote(null); setQErr(''); setQuoting(false); return; }
     let alive = true; setQuoting(true);
@@ -138,6 +138,8 @@ function Buy({ coin, wallet, ethRaw, onSent }) {
 
 export default function Terminal() {
   const { address: param } = useParams(), [search] = useSearchParams();
+  // an amount handed over by the agent's quote card (?buy=0.05); it only fills the field, the review is unchanged
+  const buyParam = /^\d{1,3}(\.\d{1,6})?$/.test(search.get('buy') || '') && Number(search.get('buy')) > 0 ? search.get('buy') : '';
   const wallet = useTerminalWallet();
   const [list, setList] = useState(null), [listErr, setListErr] = useState(''), [tab, setTab] = useState(search.get('tab') === 'majors' ? 'majors' : search.get('tab') === 'stocks' ? 'stocks' : 'memes'), [q, setQ] = useState('');
   const [coin, setCoin] = useState(null), [coinErr, setCoinErr] = useState(''), [balances, setBalances] = useState(null), [copied, setCopied] = useState(false), [major, setMajor] = useState(null);
@@ -173,7 +175,7 @@ export default function Terminal() {
   return <main className="terminal">
     <header className="t-appbar">
       <Link to="/" className="t-brand" aria-label="Onegate Privacy home"><WordmarkSvg /></Link>
-      <nav className="t-nav" aria-label="Main navigation"><NavLink to="/terminal">Terminal</NavLink><NavLink to="/privacy">Workspace</NavLink><NavLink to="/docs">Docs</NavLink></nav>
+      <nav className="t-nav" aria-label="Main navigation"><NavLink to="/terminal">Terminal</NavLink><NavLink to="/privacy">Workspace</NavLink><NavLink to="/agent">Agent</NavLink><NavLink to="/docs">Docs</NavLink></nav>
       <label className="t-find"><Search size={16} /><input ref={find} placeholder="Search name or paste a contract" value={q} onChange={e => setQ(e.target.value)} aria-label="Search coins" spellCheck={false} /><kbd>/</kbd></label>
       <span className="t-chain"><i />Robinhood Chain</span>
       {eth && <span className="t-eth">ETH <b>{price(eth.priceUsd)}</b></span>}
@@ -242,7 +244,7 @@ export default function Terminal() {
             {held.length > 0 && <div className="t-held"><h3>Your coins</h3>{held.slice(0, 8).map(h => <Link key={h.address} to={'/terminal/' + h.address} className="t-held-row"><Logo src={h.image} symbol={h.symbol} size={20} /><b>{h.symbol}</b><span>{amount(h.held, h.decimals)}</span><i>{usd(h.value)}</i></Link>)}</div>}
           </>}
         </section>
-        {coin && !major && <Buy coin={coin} wallet={wallet} ethRaw={balances?.eth ?? null} onSent={afterBuy} />}
+        {coin && !major && <Buy coin={coin} wallet={wallet} ethRaw={balances?.eth ?? null} onSent={afterBuy} prefill={buyParam} />}
       </aside>
     </div>
   </main>;

@@ -43,7 +43,7 @@ export default defineConfig(({ mode }) => ({
             return;
           }
           const name = new URL(req.url, "http://localhost").pathname.match(
-            /^\/api\/(privacy|terminal)$/,
+            /^\/api\/(privacy|terminal|agent)$/,
           )?.[1];
           if (!name) return next();
           try {

@@ -45,6 +45,7 @@ Deposit into a privacy pool from your own wallet, let your browser build the pro
 | Routes | Uniswap V3 (SwapRouter02, QuoterV2), Uniswap V4 (Universal Router, V4 Quoter, pool keys read from the PoolManager) and Pons V2 curves |
 | Privacy | Connect, unlock, prove and review as separate steps, fixed sign-in message, payload guards before the wallet or relay is asked |
 | Vault | AES-256-GCM file encryption in the browser with PBKDF2-SHA256, nothing uploaded |
+| Agent | A language model with six read-only tools over the terminal and the private pools: the board, a token, a buy quote, your wallet, the pools and a check of a planned withdrawal; it never signs or sends |
 | Checks | Unit tests for route encoding, privacy guards, engine integrity and the vault; browser checks at five widths with a stand-in wallet |
 
 ## How A Buy Is Checked
@@ -67,6 +68,15 @@ Onegate adds no fee on top and never holds your ETH.
 
 Privacy is not anonymity. Your wallet address, timing and amounts stay public on chain, and the RPC, indexer and relay providers see network metadata. The docs page spells out what remains visible.
 
+## How The Agent Works
+
+1. **Gate** the agent opens for wallets holding $150 of $OGATE, read on chain like the workspace
+2. **Sign in** the wallet signs one plain message starting `Onegate agent sign in`; it is not a transaction, and the server answers with a six hour session token (an HMAC, no database)
+3. **Ask** each question goes to the model from the server with six read-only tools; every reading shows in the answer as a step and a card
+4. **Hand off** a quote opens the terminal with the amount filled in, where the usual rebuild, dry run and wallet prompt apply; a withdrawal check points to the workspace
+
+Withdrawal checks use the pool's live fee rule (flat relay fee plus the rate) and its note counter now and 24 hours ago. They are rules of thumb about amounts, timing and recipients, not a privacy guarantee.
+
 ## Run Locally
 
 Use Node.js 22.14+ or 24 and pnpm 10.10.0
@@ -78,7 +88,7 @@ pnpm dev
 
 Open http://localhost:5586
 
-No API key or server secret is needed. The dev server serves `/api/terminal` and `/api/privacy` through the same handlers Vercel runs. Live data depends on the public Robinhood Chain RPC and market indexes being reachable.
+No API key or server secret is needed for the terminal, workspace and vault. The agent needs an OpenAI-compatible chat endpoint with tool calls on the server: `AGENT_API_URL` (the base URL ending in `/v1` or similar), `AGENT_API_KEY` and optional `AGENT_MODEL` (default `Qwen/Qwen3.6-35B-A3B`) and `AGENT_REASONING` (default `none`); without them the agent page says it is not switched on. The dev server serves `/api/terminal`, `/api/privacy` and `/api/agent` through the same handlers Vercel runs. Live data depends on the public Robinhood Chain RPC and market indexes being reachable.
 
 ```sh
 pnpm test     # unit tests
@@ -118,6 +128,7 @@ Runtime code hashes for the router, quoter, factory and pool manager contracts w
 - The privacy workspace opens for wallets holding at least $150 of $OGATE, priced on the launch curve and then on its deepest pool of at least $10K; the check runs in the interface, and the terminal stays open to everyone
 - Pools under $1K of liquidity are ignored for routes, prices and stats; a Pons launch still on its curve is always bought on the curve
 - Terminal caches and request budgets are per server instance, not a durable account-wide limit
+- Agent question limits (12 per 10 minutes, 80 a day per wallet) are kept per server instance; questions are sent to the model provider to be answered and are not stored by Onegate
 - The $OGATE fee split is TBA; the shares will be posted on the docs page
 - $OGATE has no market index yet, so the terminal shows its curve quote but no price chart until one appears
 
@@ -135,8 +146,8 @@ This is the only $OGATE contract. Publishing source code does not establish cont
 
 ```text
 src/        React pages, the gate scene, terminal, privacy workspace and file vault
-server/     Terminal data, route discovery, quotes and dry runs
-api/        Vercel functions for /api/terminal and /api/privacy
+server/     Terminal data, route discovery, quotes and dry runs; the agent and its tools
+api/        Vercel functions for /api/terminal, /api/privacy and /api/agent
 scripts/    Browser checks, route probe and the wordmark tracer
 tests/      Route encoding, privacy guards, engine integrity and vault tests
 docs/       Setup, architecture and media
