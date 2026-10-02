@@ -68,7 +68,7 @@ function Card({ card }) {
   if (card.kind === 'pools') return <div className="agent-card">
     <header><b>Private pools</b><span>fee = flat + {card.feeRateBps / 100}%</span></header>
     <table className="agent-table"><thead><tr><th /><th>ETH</th><th>USDG</th></tr></thead><tbody>
-      {[['Notes', (p) => p.notes?.toLocaleString('en-US') ?? '—'], ['New in 24h', (p) => p.notes24h ?? '—'], ['Min. deposit', (p) => p.minimumDeposit], ['Min. withdrawal', (p) => p.minimumWithdrawal], ['Flat fee', (p) => p.flatFee]].map(([label, f]) =>
+      {[['Notes', (p) => p.notes?.toLocaleString('en-US') ?? '—'], ['New in 24h', (p) => p.notes24h ?? '—'], ['Min. deposit', (p) => amt(p.minimumDeposit)], ['Min. withdrawal', (p) => amt(p.minimumWithdrawal)], ['Flat fee', (p) => amt(p.flatFee == null ? null : Number(p.flatFee.toPrecision(4)))]].map(([label, f]) =>
         <tr key={label}><th>{label}</th><td>{f(card.pools.eth)}</td><td>{f(card.pools.usdg)}</td></tr>)}
     </tbody></table>
   </div>;
