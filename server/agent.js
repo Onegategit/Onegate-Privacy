@@ -24,7 +24,7 @@ const short = (a) => a.slice(0, 6) + "…" + a.slice(-4);
 const num = (v) => { const n = Number(v); return Number.isFinite(n) ? n : null; };
 const round = (v, d = 6) => (v == null ? null : Number(v.toPrecision(d)));
 
-const RPCS = ["https://evm.privacycash.org/rpc/robinhood", "https://rpc.mainnet.chain.robinhood.com"];
+const RPCS = [process.env.ROBINHOOD_RPC_URL, "https://evm.privacycash.org/rpc/robinhood", "https://rpc.mainnet.chain.robinhood.com"].filter(Boolean);
 const chain = createPublicClient({ transport: fallback(RPCS.map((u) => http(u, { timeout: 12000, retryCount: 0 }))) });
 const POOLS = { eth: { address: "0xEC5266c9e44631e1ba22FD6377C38130c1F3B738", symbol: "ETH", decimals: 18 }, usdg: { address: "0xBB0C7F576B7bdAa8f2a119cb295076aCD0C9013f", symbol: "USDG", decimals: 6 } };
 const indexAbi = parseAbi(["function nextIndex() view returns (uint32)"]);

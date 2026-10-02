@@ -14,7 +14,8 @@ export * from "../src/terminal-route.js";
  * Contract code hashes are pinned; a change pauses buys. Nothing here signs or holds funds.
  * The feed vendor is never named in the interface.
  */
-const RPCS = ["https://rpc.mainnet.chain.robinhood.com", "https://evm.privacycash.org/rpc/robinhood"];
+// a dedicated endpoint first when the server has one (its URL carries a token, so it lives only in env), the public ones after
+const RPCS = [process.env.ROBINHOOD_RPC_URL, "https://rpc.mainnet.chain.robinhood.com", "https://evm.privacycash.org/rpc/robinhood"].filter(Boolean);
 const client = createPublicClient({ transport: fallback(RPCS.map((u) => http(u, { timeout: 12000, retryCount: 0 }))) });
 const FEED = "https://api.geckoterminal.com/api/v2/networks/robinhood";
 

@@ -1,4 +1,4 @@
-import { createPublicClient, http, parseAbi } from "viem";
+import { createPublicClient, fallback, http, parseAbi } from "viem";
 const rpc = "https://evm.privacycash.org/rpc/robinhood";
 const pools = {
   eth: "0xEC5266c9e44631e1ba22FD6377C38130c1F3B738",
@@ -10,7 +10,7 @@ export async function health() {
   if (pending) return pending;
   pending = (async () => {
     const client = createPublicClient({
-      transport: http(rpc, { timeout: 9000, retryCount: 0 }),
+      transport: fallback([process.env.ROBINHOOD_RPC_URL, rpc].filter(Boolean).map((u) => http(u, { timeout: 9000, retryCount: 0 }))),
     });
     const response = await fetch(
       "https://evm.privacycash.org/config?chain=robinhood",
