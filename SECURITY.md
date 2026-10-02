@@ -24,4 +24,4 @@ There is no promised response time, bug bounty, external audit or blanket author
 - Review dependency updates, especially `privacycash-evm` and `viem`, and keep the pinned circuit hashes in sync with a reviewed SDK version
 - Preserve third-party notices
 
-Publishing this code is not a security certification, and $OGATE has no contract yet.
+Publishing this code is not a security certification. The only $OGATE contract is `0xbe5d432a0b30443987d261b664cc6bb8bccb80d6` on Robinhood Chain.

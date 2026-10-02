@@ -97,6 +97,12 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 .keys { display: flex; flex-wrap: wrap; gap: var(--s4); }
 .ticker-line { font: 500 13px var(--mono); letter-spacing: .06em; color: var(--text-2); }
 .ticker-line b { font-weight: 600; color: var(--ink); }
+.ca-tag { display: inline-flex; align-items: center; gap: 6px; padding: 0; border: 0; background: none; font: inherit; letter-spacing: inherit; color: inherit; cursor: pointer; pointer-events: auto; transition: color var(--fast) var(--ease-ui); }
+.ca-tag:hover { color: var(--ember-deep); }
+.ca-tag svg { flex: none; opacity: .7; }
+.ca-tag .ca-short { display: none; }
+.foot .ca-tag:hover, .dock.over-stage .ca-tag:hover { color: var(--ember); }
+@media (max-width: 640px) { .ca-tag.has-full .ca-full { display: none; } .ca-tag.has-full .ca-short { display: inline; } }
 .figures dt { font: 500 var(--fs-label)/1.2 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--text-2); }
 .figures { display: flex; flex-wrap: wrap; gap: var(--s6) var(--s7); }
 .figures > div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: var(--s2); padding-left: var(--s4); border-left: var(--bw) solid var(--ink); }

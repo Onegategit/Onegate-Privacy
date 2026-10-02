@@ -1,4 +1,4 @@
-<a href="https://onegate-privacy.vercel.app"><img src="docs/assets/onegate-banner.jpg" width="100%" alt="Onegate, a private side for Robinhood Chain: private pools, coin terminal, open source, $OGATE CA TBA" /></a>
+<a href="https://onegate-privacy.vercel.app"><img src="docs/assets/onegate-banner.jpg" width="100%" alt="Onegate, a private side for Robinhood Chain: private pools, coin terminal, open source, $OGATE" /></a>
 
 <h1 align="center">Onegate</h1>
 <p align="center"><strong>A private side for Robinhood Chain</strong></p>
@@ -20,7 +20,7 @@ Deposit into a privacy pool from your own wallet, let your browser build the pro
 
 **Coin terminal** - Memes, tokenized stocks and majors with charts, pools and your balance, bought with ETH on Uniswap V3, Uniswap V4 or a Pons curve
 
-**Fees come back as privacy** - After $OGATE launches, creator fees fill a shared privacy balance for holders, $OGATE stake and the treasury (shares announced at launch)
+**Fees come back as privacy** - $OGATE creator fees fill a shared privacy balance for holders, $OGATE stake and the treasury (shares TBA)
 
 ## Demo
 
@@ -116,15 +116,18 @@ Runtime code hashes for the router, quoter, factory and pool manager contracts w
 - Hardware wallets are not supported by the privacy SDK; the same wallet and signing method are needed to recover a private balance
 - Majors are shown for reference and are not routed; tokenized stocks follow their issuers' terms
 - Terminal caches and request budgets are per server instance, not a durable account-wide limit
-- The $OGATE fee split is TBA and nothing is collected before the contract exists
+- The $OGATE fee split is TBA; the shares will be posted on the docs page
+- $OGATE has no market index yet, so the terminal shows its curve quote but no price chart until one appears
 
 ## Project Identity
 
 Ticker: **$OGATE**  
 Network: **Robinhood Chain**  
-Contract: **TBA**
+Contract: [`0xbe5d432a0b30443987d261b664cc6bb8bccb80d6`](https://robinhoodchain.blockscout.com/token/0xbe5d432a0b30443987d261b664cc6bb8bccb80d6)
 
-There is no $OGATE contract yet. The real address will be posted on the site and in this repository at the same time; any address you see before that is not from Onegate. Publishing source code does not establish contract safety, liquidity or an audit.
+Supplied by the project owner and read on chain: name Onegate Privacy, symbol OGATE, 18 decimals, 1,000,000,000 supply, a Pons V2 launch paired with ETH. Open it in the terminal at [onegate-privacy.vercel.app/terminal/0xbe5d…](https://onegate-privacy.vercel.app/terminal/0xbe5d432a0b30443987d261b664cc6bb8bccb80d6).
+
+This is the only $OGATE contract. Publishing source code does not establish contract safety, liquidity or an audit.
 
 ## Repository Map
 

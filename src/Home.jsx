@@ -5,6 +5,7 @@ import Scene from './Scene';
 import CoinTape from './CoinTape';
 import Wordmark from './Wordmark';
 import { IDENTITY } from './identity';
+import ContractTag from './ContractTag';
 import { activation, stateAt } from './flight';
 import { usePoolLive, fmt } from './pool-live';
 
@@ -18,6 +19,7 @@ const steps = [
 const GLYPHS = '░▒▓█NX/';
 const scramble = (n, seed) => Array.from({ length: n }, (_, i) => GLYPHS[(i * 7 + seed * 13 + ((i * seed) % 5)) % GLYPHS.length]).join('');
 const updates = [
+  ['Oct 2, 2026', '$OGATE is live on Robinhood Chain at 0xbe5d…80d6, a Pons launch paired with ETH. The terminal buys it on its curve, dry-run from your account like every other coin.'],
   ['Oct 2, 2026', 'The source is public on GitHub: the pages, the terminal server, the privacy worker and the tests, checked on every change.'],
   ['Oct 2, 2026', 'The terminal now opens like a trading app: one bar with search, chain, ETH price and your wallet, and the columns fill the screen.'],
   ['Oct 1, 2026', 'The terminal: Robinhood Chain coins with a chart, your balance, and buys on Uniswap V3, Uniswap V4 and Pons curves, dry-run from your account before the wallet opens.'],
@@ -30,7 +32,7 @@ const faq = [
   ['Is my wallet connection private?', 'No. Your wallet address and every deposit and withdrawal are public on chain. RPC, indexer and relay providers can see network metadata.'],
   ['How do I recover a private balance?', 'Sign the same fixed unlock message with the same wallet and signing method. A different signature can derive a different private account. Never share it.'],
   ['Has a funded deposit been tested?', 'Not yet. Amount, approval, recipient and relay guards are tested with fixtures. This integration is unaudited.'],
-  ['Where do $OGATE fees go?', 'After launch, creator fees are split between a shared privacy balance for holders, $OGATE stake and the Onegate treasury. The shares are announced at launch. Nothing is collected before the contract exists.'],
+  ['Where do $OGATE fees go?', 'After launch, creator fees are split between a shared privacy balance for holders, $OGATE stake and the Onegate treasury. The shares are TBA and will be posted on the docs page.'],
 ];
 
 // Unannounced chapters keep their titles in shifting glyphs until they ship.
@@ -41,7 +43,7 @@ function Glyphs({ n }) {
 }
 
 function Ticker() {
-  return <p className="ticker-line"><b>{IDENTITY.ticker}</b> · CA {IDENTITY.contract || 'TBA'}</p>;
+  return <p className="ticker-line"><b>{IDENTITY.ticker}</b> · CA <ContractTag full /></p>;
 }
 
 export default function Home() {
@@ -148,7 +150,7 @@ export default function Home() {
         <article className="ch ch-fees" ref={ch(5)}>
           <div className="zone top"><div className="row lift split">
             <h2>Where the fees <em>go</em></h2>
-            <p>After {IDENTITY.ticker} launches, its creator fees are collected and split three ways. The shares are announced at launch. Nothing is collected before the contract exists.</p>
+            <p>{IDENTITY.ticker} creator fees are collected and split three ways. The shares are TBA and will be posted here.</p>
           </div></div>
           <div className="zone band"><div className="row lift">
             <ol className="fee-split">

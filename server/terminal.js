@@ -185,7 +185,8 @@ export async function getCoin(input) {
   const address = addr(input);
   if (!address) throw new TerminalError("Provide a token address.", 400);
   return cached("coin:" + address, 30000, async () => {
-    const pairs = (await pairsOf(address)).filter((p) => p.baseToken?.address?.toLowerCase() === address || p.quoteToken?.address?.toLowerCase() === address)
+    let pairsErr = null;
+    const pairs = (await pairsOf(address).catch((e) => { pairsErr = e; return []; })).filter((p) => p.baseToken?.address?.toLowerCase() === address || p.quoteToken?.address?.toLowerCase() === address)
       .sort((a, b) => (num(b.liquidity?.usd) ?? 0) - (num(a.liquidity?.usd) ?? 0));
     const own = pairs.filter((p) => p.baseToken?.address?.toLowerCase() === address);
     const route = own.filter((p) => pairRoutable(p, address))[0] || null;
@@ -201,6 +202,7 @@ export async function getCoin(input) {
       const r = await client.readContract({ address: PONS_FACTORY, abi: ponsAbi, functionName: "getLaunchedToken", args: [address] }).catch(() => null);
       if (r?.exists && Number(r.phase) === 0 && r.pairToken.toLowerCase() === NATIVE) pons = { kind: "pons", venue: VENUE.pons, pool: r.curve.toLowerCase(), pair: `${symbol || token?.symbol} / ETH`, quote: NATIVE, createdAt: null };
     }
+    if (pairsErr && !pons) throw pairsErr instanceof TerminalError ? pairsErr : new TerminalError("The pair feed is unavailable right now.", 502);
     const kind = route ? pairKind(route) : null;
     return {
       address, symbol: String(symbol || token?.symbol || "").slice(0, 16), name: String(name || token?.name || "").slice(0, 80), decimals,
