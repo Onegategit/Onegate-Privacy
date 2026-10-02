@@ -1,0 +1,113 @@
+/* Privacy workspace: account on the private side (ink), the operation on paper, provider facts on the sky. */
+.workspace-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--s6); }
+.privacy-guide { display: inline-flex; align-items: center; gap: var(--s2); min-height: 48px; padding: 0 var(--s4); border: var(--bw) solid var(--ink); border-radius: var(--r-sm); background: var(--paper); font: 500 13px var(--sans); white-space: nowrap; box-shadow: 3px 4px 0 var(--ink); transition: transform var(--fast) var(--ease), box-shadow var(--fast) var(--ease); }
+.privacy-guide:hover { transform: translate(-1px, -2px); box-shadow: 4px 6px 0 var(--ink); }
+.privacy-guide:active { transform: translate(2px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+.privacy-desk { display: grid; grid-template-columns: 300px minmax(0, 1fr) 300px; gap: var(--s5); align-items: start; }
+
+.privacy-desk dl, .payment-review dl { display: grid; grid-template-columns: auto minmax(0, 1fr); margin: 0; }
+.privacy-desk dt, .privacy-desk dd, .payment-review dt, .payment-review dd { padding: var(--s3) 0; border-top: 1px solid var(--line); font-size: var(--fs-small); }
+.privacy-desk dt, .payment-review dt { padding-right: var(--s4); color: var(--text-2); }
+.privacy-desk dd, .payment-review dd { text-align: right; font: 500 var(--fs-small)/1.5 var(--mono); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+
+.privacy-button { display: inline-flex; align-items: center; justify-content: center; gap: var(--s2); min-height: 48px; padding: 0 var(--s5); border: var(--bw) solid var(--ink); border-radius: var(--r-sm); background: var(--ember); color: var(--ink); font: 500 13px var(--sans); white-space: nowrap; box-shadow: 3px 4px 0 var(--ink); transition: transform var(--fast) var(--ease), box-shadow var(--fast) var(--ease), background-color var(--fast) var(--ease-ui); }
+.privacy-button:hover:not(:disabled) { transform: translate(-1px, -2px); box-shadow: 4px 6px 0 var(--ink); }
+.privacy-button:active:not(:disabled) { transform: translate(2px, 3px); box-shadow: 1px 1px 0 var(--ink); transition-duration: 60ms; }
+.privacy-button.secondary { background: var(--paper); }
+.privacy-button:disabled { background: #c9d6e6; color: #44556d; border-color: #7d8ea8; box-shadow: none; }
+
+.privacy-sidebar { position: relative; display: grid; gap: var(--s4); padding: var(--s5); background: var(--ink); color: var(--paper); border-radius: var(--r); }
+.privacy-sidebar::before { content: ''; position: absolute; top: 0; left: var(--s4); right: var(--s4); height: 2px; background: var(--slit); }
+.privacy-sidebar h2 { font: 300 24px var(--serif); }
+.privacy-address { margin-top: calc(var(--s3) * -1); font: 500 var(--fs-small) var(--mono); color: var(--mist); }
+.privacy-sidebar dt, .privacy-sidebar dd { border-color: var(--ink-line); }
+.privacy-sidebar dt { color: var(--mist); }
+.privacy-sidebar .privacy-button { width: 100%; border-color: var(--ember); box-shadow: 0 3px 0 var(--ember-deep); }
+.privacy-sidebar .privacy-button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 0 var(--ember-deep); }
+.privacy-sidebar .privacy-button:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 var(--ember-deep); }
+.privacy-sidebar .privacy-button.secondary { background: transparent; color: var(--paper); border-color: #ffffff3d; box-shadow: none; }
+.privacy-sidebar .privacy-button.secondary:hover:not(:disabled) { background: #ffffff14; transform: none; box-shadow: none; }
+.privacy-sidebar .privacy-button:disabled { background: #ffffff0f; color: var(--dim); border-color: #ffffff1f; box-shadow: none; }
+.privacy-balance { display: grid; gap: var(--s3); padding: var(--s4); background: var(--ink-2); border: 1px solid var(--ink-line); border-radius: var(--r-sm); }
+.privacy-balance > span { font: 500 var(--fs-label) var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--mist); }
+.privacy-balance > strong { font: 400 34px/1 var(--mono); font-variant-numeric: tabular-nums; }
+.privacy-balance > strong small { margin-left: var(--s1); font-size: var(--fs-small); color: var(--mist); }
+.privacy-balance > p { font-size: 13px; color: var(--mist); }
+.privacy-inspector { display: flex; align-items: center; gap: var(--s3); padding-top: var(--s4); border-top: 1px solid var(--ink-line); font: 500 13px var(--sans); transition: color var(--fast) var(--ease-ui); }
+.privacy-inspector > svg:first-child { color: var(--ember); }
+.privacy-inspector > svg:last-child { margin-left: auto; }
+.privacy-inspector small { display: block; margin-top: 2px; font: 400 13px var(--sans); color: var(--mist); }
+.privacy-inspector:hover { color: var(--ember-hi); }
+
+.privacy-editor { background: var(--paper); border: var(--bw) solid var(--ink); border-radius: var(--r); box-shadow: 6px 8px 0 var(--ink); overflow: hidden; }
+.privacy-form-title { padding: var(--s6) var(--s6) 0; }
+.privacy-form-title h2, .privacy-activity h2 { font: 300 var(--fs-2)/1.05 var(--serif); }
+.privacy-form-title p { margin-top: var(--s2); font-size: var(--fs-small); color: var(--text-2); }
+.privacy-form { display: grid; gap: var(--s5); padding: var(--s5) var(--s6) var(--s6); }
+.privacy-form > label { display: grid; gap: var(--s2); font: 500 12px var(--sans); text-transform: uppercase; letter-spacing: .06em; }
+.privacy-form select, .privacy-form > label > input { height: 52px; padding: 0 var(--s4); border: var(--bw) solid var(--ink); border-radius: var(--r-sm); background: var(--white); font: 500 15px var(--mono); color: var(--ink); }
+.privacy-amount { display: flex; align-items: stretch; min-height: 76px; border: var(--bw) solid var(--ink); border-radius: var(--r-sm); background: var(--white); overflow: hidden; }
+.privacy-amount input { flex: 1; min-width: 0; padding: 0 var(--s4); border: 0; background: none; font: 500 clamp(28px, 3vw, 40px) var(--mono); font-variant-numeric: tabular-nums; color: var(--ink); outline-offset: -5px; }
+.privacy-amount > b { display: flex; align-items: center; padding: 0 var(--s5); border-left: var(--bw) solid var(--ink); background: var(--sky-pale); font: 600 15px var(--mono); }
+.privacy-editor input::placeholder { color: #5d6f88; }
+.privacy-summary { padding: var(--s1) 0; }
+.privacy-summary dt:first-of-type, .privacy-summary dd:first-of-type { border-top: var(--bw) solid var(--ink); }
+.privacy-note { font-size: var(--fs-small); color: var(--text-2); }
+.privacy-recovery { display: flex; gap: var(--s4); padding: var(--s5); background: var(--ink); color: var(--paper); border-radius: var(--r); }
+.privacy-recovery > svg { color: var(--ember); }
+.privacy-recovery h3 { margin-bottom: var(--s2); font: 300 20px var(--serif); }
+.privacy-recovery p { font-size: var(--fs-small); color: var(--mist); }
+.privacy-recovery strong { font: 500 13px var(--mono); color: var(--ember-hi); }
+.privacy-recovery label { display: flex; align-items: flex-start; gap: var(--s3); margin-top: var(--s4); font-size: var(--fs-small); cursor: pointer; }
+.privacy-recovery input { flex-shrink: 0; width: 20px; height: 20px; margin: 0; accent-color: var(--ember); }
+.privacy-form-actions { display: flex; flex-wrap: wrap; gap: var(--s3); }
+.privacy-stage { display: flex; align-items: center; gap: var(--s2); min-height: 20px; font: 500 13px var(--mono); color: var(--text-2); }
+.privacy-stage svg { animation: spin 1.1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.privacy-error { padding: var(--s3) var(--s4); border-left: 4px solid var(--down); background: var(--white); font: 500 var(--fs-small)/1.5 var(--sans); color: var(--down); overflow-wrap: anywhere; }
+.privacy-sidebar .privacy-error, .privacy-context .privacy-error { background: #2a0d0a; color: var(--down-on-ink); }
+.privacy-tx { display: inline-flex; align-items: center; gap: var(--s2); font: 500 var(--fs-small) var(--mono); text-decoration: underline; text-underline-offset: 4px; }
+.privacy-boundary { display: flex; align-items: flex-start; gap: var(--s3); padding: var(--s4) var(--s6); border-top: var(--bw) solid var(--ink); background: var(--sky-pale); font-size: var(--fs-small); color: var(--text-2); }
+.privacy-boundary svg { color: var(--ink); }
+.privacy-activity { min-height: 380px; padding: var(--s6); }
+.privacy-activity > p { margin-top: var(--s2); font-size: var(--fs-small); color: var(--text-2); }
+.privacy-activity article { display: flex; gap: var(--s3); margin-top: var(--s4); padding-top: var(--s4); border-top: 1px solid var(--line); }
+.privacy-activity article strong { font: 500 13px var(--sans); }
+.privacy-activity article p { margin-top: var(--s1); font: 500 13px var(--mono); color: var(--text-2); }
+.privacy-activity article a { display: inline-flex; align-items: center; gap: var(--s1); margin-top: var(--s2); font-size: var(--fs-small); text-decoration: underline; text-underline-offset: 4px; }
+.privacy-empty { margin: var(--s8) 0; text-align: center; font: 500 var(--fs-small) var(--mono); color: var(--text-2); }
+
+.privacy-context { display: grid; gap: var(--s6); }
+.privacy-context > div { padding-top: var(--s4); border-top: var(--bw) solid var(--ink); }
+.privacy-context h2 { margin-bottom: var(--s2); font: 500 var(--fs-label) var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--text-2); }
+.privacy-context p { margin-top: var(--s3); font-size: var(--fs-small); color: var(--text-2); }
+.privacy-context a { display: inline-flex; align-items: center; gap: var(--s1); margin-top: var(--s3); font-size: var(--fs-small); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
+.privacy-context .privacy-contract { margin-top: 0; font: 500 13px/1.6 var(--mono); word-break: break-all; }
+.privacy-context .privacy-button { width: 100%; margin-top: var(--s4); }
+
+.privacy-backdrop { position: fixed; inset: 0; z-index: var(--z-dialog); display: grid; place-items: center; padding: var(--s4); background: #04050fd9; }
+.payment-review { position: relative; width: 100%; max-width: 520px; max-height: 90dvh; overflow-y: auto; padding: var(--s6); background: var(--paper); color: var(--ink); border: var(--bw) solid var(--ink); border-radius: var(--r); box-shadow: 8px 10px 0 var(--ember); }
+.payment-review > svg { color: var(--ember-deep); }
+.review-close { position: absolute; top: var(--s3); right: var(--s3); width: 44px; height: 44px; display: grid; place-items: center; border: var(--bw) solid var(--ink); border-radius: var(--r-sm); background: var(--white); transition: background-color var(--fast) var(--ease-ui); }
+.review-close:hover { background: var(--sky-pale); }
+.payment-review h2 { margin: var(--s4) 0 var(--s2); font: 300 30px/1.1 var(--serif); }
+.payment-review > p { font-size: var(--fs-small); color: var(--text-2); }
+.payment-review dl { margin: var(--s5) 0; }
+.payment-review > .privacy-button { margin: 0 var(--s3) var(--s2) 0; }
+
+@media (max-width: 1240px) {
+  .privacy-desk { grid-template-columns: 280px minmax(0, 1fr); }
+  .privacy-context { grid-column: 1 / -1; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s5); }
+}
+@media (max-width: 860px) {
+  .workspace-heading { flex-direction: column; align-items: flex-start; }
+  .privacy-desk, .privacy-context { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .privacy-form-title { padding: var(--s5) var(--s4) 0; }
+  .privacy-form, .privacy-activity { padding: var(--s4); }
+  .privacy-boundary { padding: var(--s4); }
+  .privacy-recovery { padding: var(--s4); gap: var(--s3); }
+  .privacy-form-actions .privacy-button { flex: 1 1 100%; }
+  .payment-review { padding: var(--s5) var(--s4); }
+}

@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.vercel/
+.env*
+*.log
+
+# local working files
+artifacts/
+marketing/
+AGENTS.md
+DESIGN.md
+PROGRESS.md
+scripts/_*.mjs
+test-results/
+playwright-report/

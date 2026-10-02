@@ -1,0 +1,62 @@
+/* Onegate tokens. Colour sampled from the supplied artwork: a sky ground, the dark slot, ember light on its edges.
+   Ember is the only accent and is never used as text on the sky. */
+:root {
+  --sky: #9ccafc;
+  --sky-deep: #7db9fd;
+  --sky-pale: #d3e7fd;
+  --haze: #ecf6fe;
+  --paper: #f5f9ff;
+  --white: #ffffff;
+  --ink: #04050f;
+  --ink-2: #0d1222;
+  --ink-line: #ffffff1f;
+  --text: #04050f;
+  --text-2: #1b3150;
+  --mist: #a9bbd3;
+  --dim: #7d8ca3;
+  --ember: #ff8a3d;
+  --ember-hi: #ffc46b;
+  --ember-deep: #a8460f;
+  --line: #04050f26;
+  --up: #12704a;
+  --down: #9e2a17;
+  --down-on-ink: #ffb4a3;
+  --up-on-ink: #6ee0a6;
+
+  --serif: 'Newsreader Variable', 'Newsreader', Georgia, 'Times New Roman', serif;
+  --sans: 'Spline Sans Mono Variable', 'Spline Sans Mono', ui-monospace, 'Cascadia Mono', monospace;
+  --mono: var(--sans);
+  --fs-display: clamp(64px, 10.5vw, 168px);
+  --fs-1: clamp(34px, 3.8vw, 58px);
+  --fs-2: clamp(24px, 2.2vw, 34px);
+  --fs-3: 20px;
+  --fs-lead: 15px;
+  --fs-body: 14px;
+  --fs-small: 13px;
+  --fs-label: 11px;
+
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px;
+  --s6: 32px; --s7: 48px; --s8: 64px; --s9: 96px; --s10: 128px;
+  --gutter: clamp(16px, 3.2vw, 48px);
+  --max: 1440px;
+
+  --r-sm: 4px;
+  --r: 6px;
+  --bw: 2px;
+  --press: 4px 5px 0 var(--ink);
+  --press-hover: 5px 8px 0 var(--ink);
+  --press-down: 1px 2px 0 var(--ink);
+  --slit: linear-gradient(90deg, transparent, var(--ember) 22%, var(--ember-hi) 50%, var(--ember) 78%, transparent);
+
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --ease-ui: cubic-bezier(.4, 0, .2, 1);
+  --fast: 160ms;
+  --slow: 700ms;
+
+  --z-chapter: 2;
+  --z-dock: 40;
+  --z-dialog: 100;
+  --dock-h: 64px;
+  --lane-h: 32px;
+  --tape-h: calc(var(--lane-h) * 2 + 18px);
+}

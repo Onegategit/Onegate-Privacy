@@ -1,0 +1,96 @@
+[
+    {
+        "inputs":  [
+                       {
+                           "components":  [
+                                              {
+                                                  "internalType":  "uint256[2]",
+                                                  "name":  "pA",
+                                                  "type":  "uint256[2]"
+                                              },
+                                              {
+                                                  "internalType":  "uint256[2][2]",
+                                                  "name":  "pB",
+                                                  "type":  "uint256[2][2]"
+                                              },
+                                              {
+                                                  "internalType":  "uint256[2]",
+                                                  "name":  "pC",
+                                                  "type":  "uint256[2]"
+                                              },
+                                              {
+                                                  "internalType":  "bytes32",
+                                                  "name":  "root",
+                                                  "type":  "bytes32"
+                                              },
+                                              {
+                                                  "internalType":  "bytes32[2]",
+                                                  "name":  "inputNullifiers",
+                                                  "type":  "bytes32[2]"
+                                              },
+                                              {
+                                                  "internalType":  "bytes32[2]",
+                                                  "name":  "outputCommitments",
+                                                  "type":  "bytes32[2]"
+                                              },
+                                              {
+                                                  "internalType":  "uint256",
+                                                  "name":  "publicAmount",
+                                                  "type":  "uint256"
+                                              },
+                                              {
+                                                  "internalType":  "bytes32",
+                                                  "name":  "extDataHash",
+                                                  "type":  "bytes32"
+                                              }
+                                          ],
+                           "internalType":  "struct EtherPool.Proof",
+                           "name":  "_args",
+                           "type":  "tuple"
+                       },
+                       {
+                           "components":  [
+                                              {
+                                                  "internalType":  "address",
+                                                  "name":  "recipient",
+                                                  "type":  "address"
+                                              },
+                                              {
+                                                  "internalType":  "int256",
+                                                  "name":  "extAmount",
+                                                  "type":  "int256"
+                                              },
+                                              {
+                                                  "internalType":  "address",
+                                                  "name":  "feeRecipient",
+                                                  "type":  "address"
+                                              },
+                                              {
+                                                  "internalType":  "uint256",
+                                                  "name":  "fee",
+                                                  "type":  "uint256"
+                                              },
+                                              {
+                                                  "internalType":  "bytes",
+                                                  "name":  "encryptedOutput1",
+                                                  "type":  "bytes"
+                                              },
+                                              {
+                                                  "internalType":  "bytes",
+                                                  "name":  "encryptedOutput2",
+                                                  "type":  "bytes"
+                                              }
+                                          ],
+                           "internalType":  "struct EtherPool.ExtData",
+                           "name":  "_extData",
+                           "type":  "tuple"
+                       }
+                   ],
+        "name":  "transact",
+        "outputs":  [
+
+                    ],
+        "stateMutability":  "payable",
+        "type":  "function"
+    }
+]
