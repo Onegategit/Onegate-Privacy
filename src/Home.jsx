@@ -19,6 +19,7 @@ const steps = [
 const GLYPHS = '░▒▓█NX/';
 const scramble = (n, seed) => Array.from({ length: n }, (_, i) => GLYPHS[(i * 7 + seed * 13 + ((i * seed) % 5)) % GLYPHS.length]).join('');
 const updates = [
+  ['Oct 2, 2026', '$OGATE left its Pons curve for its Uniswap V4 pool. The terminal buys it on the pool now, and the holders check prices it there.'],
   ['Oct 2, 2026', 'The privacy workspace is now for holders: connect a wallet with at least $150 of $OGATE. The terminal stays open, and buys $OGATE on its curve.'],
   ['Oct 2, 2026', '$OGATE is live on Robinhood Chain at 0xbe5d…80d6, a Pons launch paired with ETH. The terminal buys it on its curve, dry-run from your account like every other coin.'],
   ['Oct 2, 2026', 'The source is public on GitHub: the pages, the terminal server, the privacy worker and the tests, checked on every change.'],

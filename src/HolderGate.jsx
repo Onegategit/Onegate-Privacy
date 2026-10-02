@@ -54,7 +54,7 @@ export default function HolderGate({ children }) {
   return <main className="page gate-page">
     <div className="page-heading"><span className="eyebrow">Robinhood Chain · holders</span><h1>Privacy workspace</h1><p>Open to wallets holding at least {usd(HOLDER_MIN_USD)} of {IDENTITY.ticker}</p></div>
     <section className="gate-card" aria-live="polite">
-      <div className="gate-head"><LockKeyhole size={22} /><div><h2>Hold {usd(HOLDER_MIN_USD)} of {IDENTITY.ticker} to open it</h2><p>Connect the wallet you will use here. Onegate reads its {IDENTITY.ticker} balance on Robinhood Chain and prices it on the launch curve. Nothing is signed and nothing moves.</p></div></div>
+      <div className="gate-head"><LockKeyhole size={22} /><div><h2>Hold {usd(HOLDER_MIN_USD)} of {IDENTITY.ticker} to open it</h2><p>Connect the wallet you will use here. Onegate reads its {IDENTITY.ticker} balance on Robinhood Chain and prices it {d?.priceSource === 'curve' ? 'on the launch curve' : 'on its pool'}. Nothing is signed and nothing moves.</p></div></div>
 
       {!account && <div className="gate-actions">
         <button type="button" className="button" onClick={() => wallet.connect()} disabled={wallet.busy}>{wallet.busy ? 'Waiting for wallet' : 'Connect wallet'}<Wallet /></button>
